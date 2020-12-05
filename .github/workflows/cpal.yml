@@ -198,3 +198,20 @@ jobs:
       run: cargo test --all --no-default-features --verbose
     - name: Run all features
       run: cargo test --all --all-features --verbose
+
+  ios-test:
+    runs-on: macOS-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install llvm and clang
+      run: brew install llvm
+    - name: Install stable
+      uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: stable
+        override: true
+    - name: Build iphoneos feedback example
+      run: xcodebuild -scheme cpal-ios-example -configuration Debug -derivedDataPath build -sdk iphoneos
+    - name: Build iphonesimulator feedback example
+      run: xcodebuild -scheme cpal-ios-example -configuration Debug -derivedDataPath build -sdk iphonesimulator
